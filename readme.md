@@ -33,7 +33,7 @@ The system implements a zero-knowledge architecture where:
 - **Network** transmits only encrypted content
 - **Passwords** never leave the client device
 
-![Secure File Transfer Architecture](architecture.svg)
+![Secure File Transfer Architecture](architecture.png)
 
 ## 🚀 Quick Start
 
