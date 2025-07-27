@@ -46,8 +46,8 @@ The system implements a zero-knowledge architecture where:
 
 1. **Clone the repository**
    ```bash
-   git clone [https://github.com/yourusername/secure-file-transfer.git](https://github.com/its-dedsec/Secure-Share.git)
-   cd secure-file-transfer
+   git clone https://github.com/its-dedsec/Secure-Share.git
+   cd Secure-Share
    ```
 
 2. **Install dependencies**
@@ -221,7 +221,7 @@ python secure_client.py download xyz789-abc123 --server http://10.0.0.50:8080
 ## 📁 File Structure
 
 ```
-secure-file-transfer/
+Secure-Share/
 ├── secure_server.py          # Server application
 ├── secure_client.py          # Client application
 ├── requirements.txt          # Python dependencies
