@@ -22,8 +22,8 @@ A zero-knowledge, network-enabled secure file sharing system implementing AES-25
 └─────────────┘                      └─────────────┘                      └─────────────┘
       ▲                                      │                                      ▲
       │ Password                             │ No Access to:                       │ Password
-      │ (Local Only)                        │ • Plaintext Files                   │ (Local Only)
-      └──────────────────────────────────────┤ • Passwords                       └──────────
+      │ (Local Only)                         │ • Plaintext Files                   │ (Local Only)
+      └──────────────────────────────────────┤ • Passwords                         └──────────
                                              │ • Encryption Keys
                                              └─ Only Stores Encrypted Data
 ```
