@@ -46,7 +46,7 @@ The system implements a zero-knowledge architecture where:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/secure-file-transfer.git
+   git clone [https://github.com/yourusername/secure-file-transfer.git](https://github.com/its-dedsec/Secure-Share.git)
    cd secure-file-transfer
    ```
 
