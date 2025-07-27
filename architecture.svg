@@ -1,0 +1,234 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">
+    Secure File Transfer System Architecture
+  </text>
+  <text x="600" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#64748b">
+    Zero-Knowledge Network File Sharing with AES-256-GCM Encryption
+  </text>
+  
+  <!-- Client A (Upload) -->
+  <g id="client-a">
+    <rect x="50" y="150" width="280" height="400" rx="15" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="190" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af">
+      Client A (Upload)
+    </text>
+    <text x="190" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#3730a3">
+      192.168.1.101
+    </text>
+    
+    <!-- Client A Components -->
+    <rect x="70" y="220" width="240" height="60" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+    <text x="190" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af">
+      📄 Original File
+    </text>
+    <text x="190" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+      document.pdf (plaintext)
+    </text>
+    <text x="190" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ef4444">
+      Never leaves device in plaintext
+    </text>
+    
+    <rect x="70" y="300" width="240" height="80" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="190" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#92400e">
+      🔐 Local Encryption
+    </text>
+    <text x="190" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#78716c">
+      • AES-256-GCM</text>
+    <text x="190" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#78716c">
+      • PBKDF2 (100k iterations)</text>
+    <text x="190" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#78716c">
+      • Random Salt + IV</text>
+    
+    <rect x="70" y="400" width="240" height="60" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1"/>
+    <text x="190" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#166534">
+      🔒 Password Input
+    </text>
+    <text x="190" y="435" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+      User enters password
+    </text>
+    <text x="190" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ef4444">
+      Never transmitted to server
+    </text>
+    
+    <rect x="70" y="480" width="240" height="50" rx="8" fill="#fecaca" stroke="#ef4444" stroke-width="1"/>
+    <text x="190" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#991b1b">
+      📤 Encrypted Upload
+    </text>
+    <text x="190" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+      Only encrypted data sent
+    </text>
+  </g>
+  
+  <!-- Server (Middle) -->
+  <g id="server">
+    <rect x="460" y="150" width="280" height="500" rx="15" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="3"/>
+    <text x="600" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#6b21a8">
+      🖥️ Secure Server
+    </text>
+    <text x="600" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#6b21a8">
+      192.168.1.100:5000
+    </text>
+    
+    <!-- Server Components -->
+    <rect x="480" y="220" width="240" height="80" rx="8" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+    <text x="600" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#6b21a8">
+      🗄️ Encrypted Storage
+    </text>
+    <text x="600" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#475569">
+      Files: abc123.enc, xyz789.enc</text>
+    <text x="600" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#475569">
+      Metadata: filenames, timestamps</text>
+    <text x="600" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ef4444">
+      NO access to plaintext content</text>
+    
+    <rect x="480" y="320" width="240" height="100" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="600" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#dc2626">
+      🚫 Zero-Knowledge Design
+    </text>
+    <text x="600" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#475569">
+      Server CANNOT access:</text>
+    <text x="600" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#dc2626">
+      ❌ Original files (plaintext)</text>
+    <text x="600" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#dc2626">
+      ❌ User passwords</text>
+    <text x="600" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#dc2626">
+      ❌ Encryption keys</text>
+    <text x="600" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#dc2626">
+      ❌ Decrypted content</text>
+    
+    <rect x="480" y="440" width="240" height="80" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+    <text x="600" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#166534">
+      ⚙️ Server Functions
+    </text>
+    <text x="600" y="475" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#475569">
+      • Store encrypted blobs</text>
+    <text x="600" y="490" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#475569">
+      • Manage file IDs & metadata</text>
+    <text x="600" y="505" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#475569">
+      • Auto-expire files (7 days)</text>
+    
+    <rect x="480" y="540" width="240" height="80" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+    <text x="600" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#334155">
+      🌐 API Endpoints
+    </text>
+    <text x="600" y="575" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#475569">
+      POST /upload | GET /download/&lt;id&gt;</text>
+    <text x="600" y="590" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#475569">
+      GET /list | DELETE /delete/&lt;id&gt;</text>
+    <text x="600" y="605" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#475569">
+      GET /info/&lt;id&gt; | GET /health</text>
+  </g>
+  
+  <!-- Client B (Download) -->
+  <g id="client-b">
+    <rect x="870" y="150" width="280" height="400" rx="15" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="1010" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#92400e">
+      Client B (Download)
+    </text>
+    <text x="1010" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#92400e">
+      192.168.1.102
+    </text>
+    
+    <!-- Client B Components -->
+    <rect x="890" y="220" width="240" height="60" rx="8" fill="#fecaca" stroke="#ef4444" stroke-width="1"/>
+    <text x="1010" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#991b1b">
+      📥 Encrypted Download
+    </text>
+    <text x="1010" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+      File ID: abc123-def456
+    </text>
+    <text x="1010" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ef4444">
+      Receives only encrypted data
+    </text>
+    
+    <rect x="890" y="300" width="240" height="60" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1"/>
+    <text x="1010" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#166534">
+      🔑 Password Entry
+    </text>
+    <text x="1010" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+      Same password as upload
+    </text>
+    <text x="1010" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ef4444">
+      Required for decryption
+    </text>
+    
+    <rect x="890" y="380" width="240" height="80" rx="8" fill="#e0f2fe" stroke="#0891b2" stroke-width="1"/>
+    <text x="1010" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#0c4a6e">
+      🔓 Local Decryption
+    </text>
+    <text x="1010" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#78716c">
+      • Extract salt, IV, ciphertext</text>
+    <text x="1010" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#78716c">
+      • Derive key from password</text>
+    <text x="1010" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#78716c">
+      • AES-GCM decrypt + verify</text>
+    
+    <rect x="890" y="480" width="240" height="50" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1"/>
+    <text x="1010" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af">
+      📄 Original File Restored
+    </text>
+    <text x="1010" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+      document.pdf (decrypted)
+    </text>
+  </g>
+  
+  <!-- Arrows and Data Flow -->
+  
+  <!-- Upload Arrow -->
+  <defs>
+    <marker id="arrowhead-upload" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444"/>
+    </marker>
+    <marker id="arrowhead-download" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0891b2"/>
+    </marker>
+  </defs>
+  
+  <!-- Upload flow -->
+  <path d="M 330 300 Q 395 280 460 300" stroke="#ef4444" stroke-width="3" fill="none" marker-end="url(#arrowhead-upload)"/>
+  <text x="395" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ef4444">
+    Encrypted Data Only
+  </text>
+  <text x="395" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">
+    {salt, iv, ciphertext, metadata}
+  </text>
+  
+  <!-- Download flow -->
+  <path d="M 740 350 Q 805 330 870 350" stroke="#0891b2" stroke-width="3" fill="none" marker-end="url(#arrowhead-download)"/>
+  <text x="805" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#0891b2">
+    Encrypted Data Only
+  </text>
+  <text x="805" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#0c4a6e">
+    File ID → Encrypted Bundle
+  </text>
+  
+  <!-- Security guarantees at bottom -->
+  <rect x="200" y="700" width="800" height="80" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+  <text x="600" y="720" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#dc2626">
+    🛡️ Security Guarantees
+  </text>
+  <text x="300" y="740" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    ✓ End-to-end encryption with AES-256-GCM
+  </text>
+  <text x="300" y="755" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    ✓ PBKDF2 key derivation (100,000 iterations)
+  </text>
+  <text x="300" y="770" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    ✓ Zero-knowledge architecture - server cannot decrypt
+  </text>
+  
+  <text x="700" y="740" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    ✓ Authentication tags prevent tampering
+  </text>
+  <text x="700" y="755" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    ✓ Unique salt/IV per file prevents attacks
+  </text>
+  <text x="700" y="770" font-family="Arial, sans-serif" font-size="12" fill="#475569">
+    ✓ Automatic file expiration (7 days)
+  </text>
+  
+</svg>
