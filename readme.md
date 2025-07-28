@@ -1,17 +1,21 @@
 # 🔐 Secure File Transfer System
 
-A zero-knowledge, network-enabled secure file sharing system implementing AES-256-GCM encryption with PBKDF2 key derivation. Based on cybersecurity internship research focused on secure data handling and cryptographic best practices.
+A zero-knowledge encrypted file sharing system with enterprise-grade security features including audit logging, rate limiting, and owner-based access control.
 
 ## 🌟 Features
 
 - **🔒 Zero-Knowledge Architecture**: Files are encrypted/decrypted entirely on the client side
 - **🛡️ Military-Grade Encryption**: AES-256-GCM with authentication and integrity protection
 - **🔑 Strong Key Derivation**: PBKDF2 with SHA-256 and 100,000 iterations
-- **🌐 Network Sharing**: Share encrypted files across local networks
+- **🌐 Network Sharing**: Share encrypted files across local networks or internet
+- **👤 Owner-Based Access Control**: Only file uploaders can delete their files
+- **🚦 Rate Limiting**: DDoS protection with configurable limits
+- **📊 Comprehensive Audit Logging**: All operations logged for security monitoring
+- **🔍 Client Fingerprinting**: Additional layer of owner verification
 - **⏰ Auto-Expiration**: Files automatically expire after 7 days
 - **📱 Cross-Platform**: Works on Windows, macOS, and Linux
 - **🚫 No Password Recovery**: True zero-knowledge - server never sees passwords
-- **📊 File Management**: List, download, and delete files with metadata
+- **📁 File Management**: List, download, delete, and get info on files with metadata
 
 ## 🏗️ Architecture
 
@@ -27,6 +31,7 @@ A zero-knowledge, network-enabled secure file sharing system implementing AES-25
                                              │ • Encryption Keys
                                              └─ Only Stores Encrypted Data
 ```
+
 The system implements a zero-knowledge architecture where:
 - **Clients** handle all encryption/decryption locally
 - **Server** stores only encrypted data and metadata
@@ -39,7 +44,7 @@ The system implements a zero-knowledge architecture where:
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.8 or higher
 - pip (Python package installer)
 
 ### Installation
@@ -64,17 +69,25 @@ The system implements a zero-knowledge architecture where:
 
 1. **Start the server** (on one computer)
    ```bash
+   # Development server (localhost only)
+   python secure_server.py
+   
+   # Production server (accessible to network)
    python secure_server.py --host 0.0.0.0 --port 5000
    ```
 
 2. **Upload a file** (from any computer on the network)
    ```bash
-   python secure_client.py upload document.pdf --server http://192.168.1.100:5000
+   python secure_client.py upload document.pdf --server http://SERVER_IP:5000
    ```
 
-3. **Download the file** (from any other computer)
+3. **Share and download** (from any other computer)
    ```bash
-   python secure_client.py download <FILE_ID> --server http://192.168.1.100:5000
+   # List available files
+   python secure_client.py list --server http://SERVER_IP:5000
+   
+   # Download file using File ID
+   python secure_client.py download <FILE_ID> --server http://SERVER_IP:5000
    ```
 
 ## 📖 Detailed Usage
@@ -82,159 +95,164 @@ The system implements a zero-knowledge architecture where:
 ### Server Commands
 
 ```bash
-# Start server with default settings
+# Basic server
 python secure_server.py
 
-# Start server accessible to entire network
+# Production server (all interfaces)
 python secure_server.py --host 0.0.0.0 --port 5000
 
-# Custom storage directory
-python secure_server.py --storage /path/to/storage
-
-# Enable debug mode
-python secure_server.py --debug
+# Custom configuration
+python secure_server.py \
+    --host 0.0.0.0 \
+    --port 8080 \
+    --storage /secure/file/storage \
+    --debug
 
 # Get help
 python secure_server.py --help
 ```
 
-**Server will be accessible at:** `http://YOUR_IP_ADDRESS:5000`
-
 ### Client Commands
 
-#### Upload Files
+| Command | Description | Example |
+|---------|-------------|---------|
+| `upload` | Upload and encrypt file | `python secure_client.py upload document.pdf` |
+| `download` | Download and decrypt file | `python secure_client.py download abc123-def456` |
+| `list` | List all available files | `python secure_client.py list` |
+| `owned` | List files you own | `python secure_client.py owned` |
+| `info` | Get file information | `python secure_client.py info abc123-def456` |
+| `delete` | Delete owned file | `python secure_client.py delete abc123-def456` |
+| `health` | Check server status | `python secure_client.py health` |
+
+#### Upload Example
 ```bash
-# Basic upload
-python secure_client.py upload file.pdf
+python secure_client.py upload family_photos.zip --server http://SERVER_IP:5000
 
-# Upload to specific server
-python secure_client.py upload file.pdf --server http://192.168.1.100:5000
-
-# Upload will prompt for password
 Enter encryption password: ********
 Confirm password: ********
 ✅ File uploaded successfully!
 ℹ️  File ID: abc123-def456-ghi789
-ℹ️  Share this ID with others to download the file
+ℹ️  Owner Token: secret-token-for-management
+ℹ️  Share the File ID with others to download
 ```
 
-#### Download Files
+#### Download Example
 ```bash
-# Download with file ID
-python secure_client.py download abc123-def456-ghi789 --server http://192.168.1.100:5000
+python secure_client.py download abc123-def456-ghi789 --server http://SERVER_IP:5000
 
-# Download to specific location
-python secure_client.py download abc123-def456-ghi789 -o /path/to/save/file.pdf --server http://192.168.1.100:5000
+Enter decryption password: ********
+✅ File downloaded and decrypted successfully!
+📁 Saved as: family_photos.zip
 ```
 
-#### File Management
+## 🔒 Security Features
+
+### Enterprise-Grade Security
+
+- **Zero-Knowledge Encryption**: Files encrypted client-side before upload
+- **AES-256-GCM**: Military-grade encryption with authenticated encryption
+- **Owner-Based Access Control**: Only file uploaders can delete their files
+- **Rate Limiting**: 60 requests/minute, 1000 requests/hour per IP
+- **Comprehensive Audit Logging**: JSON-formatted security event logs
+- **Client Fingerprinting**: IP + User-Agent based owner verification
+- **Automatic File Expiry**: Files deleted after 7 days by default
+
+### Cryptographic Implementation
+
+| Component | Specification | Purpose |
+|-----------|---------------|---------|
+| **Encryption** | AES-256-GCM | Confidentiality + Authentication |
+| **Key Derivation** | PBKDF2-SHA256 | Password-based key generation |
+| **Iterations** | 100,000 | Brute-force resistance |
+| **Salt Length** | 16 bytes | Rainbow table prevention |
+| **IV Length** | 12 bytes | GCM initialization vector |
+| **Max File Size** | 50 MB | Configurable server limit |
+
+### Security Architecture
+
+- **Client-Side Encryption**: All encryption/decryption happens locally
+- **Server Blindness**: Server never sees plaintext data or passwords
+- **Key Isolation**: Encryption keys never transmitted to server
+- **Metadata Protection**: Only filename and size metadata stored
+- **Owner Token System**: Secure file management with dual verification
+
+## 📊 Monitoring & Logging
+
+### Audit Log Features
+
+All operations are logged in JSON format with:
+- Timestamp and event type
+- Client IP and User-Agent
+- File operations (upload, download, delete)
+- Success/failure status
+- Rate limit violations
+- Server errors
+
 ```bash
-# List all files on server
-python secure_client.py list --server http://192.168.1.100:5000
+# Monitor logs in real-time
+tail -f logs/audit.log
 
-# Get file information
-python secure_client.py info abc123-def456-ghi789 --server http://192.168.1.100:5000
+# Parse with jq for analysis
+tail -f logs/audit.log | jq '.message'
 
-# Delete a file
-python secure_client.py delete abc123-def456-ghi789 --server http://192.168.1.100:5000
-
-# Check server health
-python secure_client.py health --server http://192.168.1.100:5000
+# Filter failed operations
+tail -f logs/audit.log | jq 'select(.message.status == "error")'
 ```
+
+### Event Types Tracked
+
+- `file_upload` - File upload attempts
+- `file_download` - File download attempts  
+- `file_delete` - File deletion attempts
+- `rate_limit_exceeded` - Rate limit violations
+- `metadata_load_error` - Server errors
+- And more...
 
 ## 🌐 Network Setup Examples
 
-### Home Network Example
+### Home Network
 ```bash
-# Computer A (192.168.1.100) - Server
+# Server Computer (SERVER_IP)
 python secure_server.py --host 0.0.0.0 --port 5000
 
-# Computer B - Upload
-python secure_client.py upload family_photos.zip --server http://192.168.1.100:5000
-
-# Computer C - Download
-python secure_client.py download abc123-def456 --server http://192.168.1.100:5000
+# Any device on network
+python secure_client.py upload document.pdf --server http://SERVER_IP:5000
+python secure_client.py list --server http://SERVER_IP:5000
 ```
 
-### Office Network Example
+### Production Deployment
 ```bash
-# Server Machine (10.0.0.50)
-python secure_server.py --host 0.0.0.0 --port 8080 --storage /shared/secure_files
+# Production server with custom storage
+python secure_server.py \
+    --host 0.0.0.0 \
+    --port 5000 \
+    --storage /secure/encrypted/files
 
-# Employee A
-python secure_client.py upload quarterly_report.pdf --server http://10.0.0.50:8080
-
-# Employee B
-python secure_client.py list --server http://10.0.0.50:8080
-python secure_client.py download xyz789-abc123 --server http://10.0.0.50:8080
+# Client access
+python secure_client.py upload report.pdf --server https://your-domain.com
 ```
 
 ## 🔧 Configuration
 
-### Server Configuration
+### Server Options
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `--host` | `0.0.0.0` | Server bind address |
-| `--port` | `5000` | Server port |
-| `--storage` | `./server_storage` | Storage directory |
-| `--debug` | `False` | Enable debug logging |
+| `--host` | `0.0.0.0` | Host interface to bind to |
+| `--port` | `5000` | Port number to listen on |
+| `--storage` | `./server_storage` | Directory for encrypted file storage |
+| `--debug` | `False` | Enable Flask debug mode |
 
-### Security Settings
+### Client Options
 
-| Setting | Value | Purpose |
-|---------|-------|---------|
-| **Encryption** | AES-256-GCM | Confidentiality + Authentication |
-| **Key Derivation** | PBKDF2-SHA256 | Password-based key generation |
-| **Iterations** | 100,000 | Resistance to brute-force attacks |
-| **Salt Length** | 16 bytes | Prevent rainbow table attacks |
-| **IV Length** | 12 bytes | GCM mode initialization vector |
-| **File Expiry** | 7 days | Automatic cleanup |
-| **Max File Size** | 50 MB | Configurable limit |
+| Option | Description |
+|--------|-------------|
+| `-s, --server` | Server URL (default: http://localhost:5000) |
+| `-o, --output` | Output file path for downloads |
+| `--owner-token` | Explicit owner token for operations |
+| `--no-banner` | Suppress banner display |
 
-## 🔒 Security Features
-
-### Cryptographic Implementation
-
-- **AES-256-GCM**: Advanced Encryption Standard with Galois/Counter Mode
-  - Provides both confidentiality and authenticity
-  - Detects tampering through authentication tags
-  
-- **PBKDF2 Key Derivation**:
-  - Uses SHA-256 hash function
-  - 100,000 iterations for computational cost
-  - Unique salt per file prevents rainbow table attacks
-
-- **Zero-Knowledge Design**:
-  - All encryption/decryption happens client-side
-  - Server never receives plaintext data or passwords
-  - Even server compromise doesn't expose file contents
-
-### Security Best Practices
-
-1. **Use Strong Passwords**: 12+ characters with mixed case, numbers, and symbols
-2. **Secure Networks**: Only use on trusted networks
-3. **Regular Updates**: Keep dependencies updated
-4. **Access Control**: Restrict server access to authorized users
-5. **Monitoring**: Monitor server logs for suspicious activity
-
-## 📁 File Structure
-
-```
-Secure-Share/
-├── secure_server.py          # Server application
-├── secure_client.py          # Client application
-├── requirements.txt          # Python dependencies
-├── README.md                # This file
-└── server_storage/          # Server storage (created automatically)
-    ├── metadata.json        # File metadata and expiration
-    ├── abc123-def456.enc    # Encrypted file 1
-    └── xyz789-ghi012.enc    # Encrypted file 2
-```
-
-## 🛠️ Development
-
-### API Endpoints
+## 🛠️ API Reference
 
 The server exposes RESTful API endpoints:
 
@@ -245,61 +263,85 @@ The server exposes RESTful API endpoints:
 | `GET` | `/api/download/<id>` | Download encrypted file |
 | `GET` | `/api/list` | List all files |
 | `GET` | `/api/info/<id>` | Get file metadata |
-| `DELETE` | `/api/delete/<id>` | Delete file |
+| `DELETE` | `/api/delete/<id>` | Delete file (requires owner token) |
 
-### Dependencies
+## 📁 File Structure
 
-- **cryptography**: Cryptographic primitives and algorithms
-- **flask**: Web server framework
-- **requests**: HTTP client library
+```
+Secure-Share/
+├── secure_server.py          # Enhanced server with security features
+├── secure_client.py          # Enhanced client with owner token support
+├── requirements.txt          # Python dependencies
+├── README.md                # This documentation
+├── server_storage/          # Encrypted files storage
+│   ├── abc123-def456.enc   # Encrypted file data
+│   └── metadata.json       # File metadata and expiration
+└── logs/                   # Audit logs
+    └── audit.log          # Security event log
+```
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-#### Server Won't Start
+#### Server Connection
 ```bash
-# Check if port is in use
-netstat -tulpn | grep :5000
-
-# Use different port
-python secure_server.py --port 8080
-```
-
-#### Cannot Connect to Server
-```bash
-# Test server connectivity
+# Check server health
 python secure_client.py health --server http://SERVER_IP:PORT
 
-# Check firewall settings
-sudo ufw allow 5000  # Linux
-# Windows: Check Windows Firewall
+# Test connectivity
+ping SERVER_IP
+telnet SERVER_IP PORT
 ```
 
-#### Permission Denied
+#### Rate Limiting
 ```bash
-# Make scripts executable
-chmod +x *.py
-
-# Check file permissions
-ls -la *.py
+# Error: "Rate limit exceeded"
+# Solution: Wait 1 minute or contact admin
 ```
 
-#### Decryption Fails
-- Verify you're using the correct password
-- Ensure the encrypted file hasn't been corrupted
-- Check that file hasn't expired (7-day limit)
+#### File Not Found
+```bash
+# Check if file exists
+python secure_client.py list --server http://SERVER_IP:PORT
+
+# Check if file expired (7-day default)
+python secure_client.py info FILE_ID --server http://SERVER_IP:PORT
+```
+
+#### Permission Denied on Delete
+```bash
+# Only file owners can delete
+# Check owned files
+python secure_client.py owned --server http://SERVER_IP:PORT
+```
 
 ### Finding Your Server IP
 
 ```bash
 # Linux/macOS
-ip addr show | grep inet
 hostname -I
+ip addr show | grep inet
 
 # Windows
 ipconfig
 ```
+
+## 📈 Best Practices
+
+### Security
+- Use strong, unique passwords for each file
+- Deploy with HTTPS in production
+- Monitor audit logs regularly
+- Keep dependencies updated
+- Use firewall rules to restrict access
+
+### Operational  
+- Regular backups of server storage
+- Log rotation for audit logs
+- Monitor disk space usage
+- Clean up expired files
+- Document your deployment
 
 ## 🤝 Contributing
 
@@ -313,14 +355,14 @@ ipconfig
 
 ```bash
 # Clone your fork
-git clone https://github.com/yourusername/secure-file-transfer.git
-cd secure-file-transfer
+git clone https://github.com/its-dedsec/Secure-Share.git
+cd Secure-Share
 
-# Install development dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# Run tests
-python -m pytest tests/  # (if tests are added)
+# Run in development mode
+python secure_server.py --debug
 ```
 
 ## 📄 License
@@ -347,6 +389,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**⚠️ Security Notice**: This software is provided for educational and research purposes. While it implements industry-standard cryptographic practices, please conduct your own security audit before using in production environments.
+**⚠️ Security Notice**: This software provides strong encryption for file contents, but metadata (filenames, sizes, upload times) are visible to the server operator. For maximum privacy, consider encrypting sensitive filenames before upload.
 
 **🛡️ Zero-Knowledge Guarantee**: Your files and passwords never leave your device in plaintext form. The server acts only as encrypted storage and cannot access your data.
+
+**🏢 Enterprise Ready**: With comprehensive audit logging, rate limiting, and owner-based access control, this system is suitable for both personal and enterprise use.
